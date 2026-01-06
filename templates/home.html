@@ -7,20 +7,47 @@
 <h2>Find Best Device</h2>
 
 <form method="get">
-    <label>Brand:</label>
-    <select name="brand">
-        <option value="">All</option>
-        <option value="Samsung" {% if brand == "Samsung" %}selected{% endif %}>Samsung</option>
-        <option value="Apple" {% if brand == "Apple" %}selected{% endif %}>Apple</option>
-        <option value="Xiaomi" {% if brand == "Xiaomi" %}selected{% endif %}>Xiaomi</option>
-        <option value="Realme" {% if brand == "Realme" %}selected{% endif %}>Realme</option>
-    </select>
+    <!-- Brand -->
+    <label>Brand</label>
+    <input type="text" name="brand" value="{{ brand }}">
 
-    <label>Max Price:</label>
+    <!-- Price -->
+    <label>Max Price</label>
     <input type="number" name="price" value="{{ price }}">
 
-    <button type="submit">Filter</button>
+    <!-- RAM -->
+    <label>RAM (GB)</label>
+    <input type="number" name="ram" value="{{ ram }}">
+
+    <!-- Storage -->
+    <label>Storage (GB)</label>
+    <input type="number" name="storage" value="{{ storage }}">
+
+    <!-- Battery -->
+    <label>Battery</label>
+    <input type="text" name="battery" value="{{ battery }}">
+
+    <!-- Processor -->
+    <label>Processor</label>
+    <input type="text" name="processor" value="{{ processor }}">
+
+    <!-- Display -->
+    <label>Display</label>
+    <input type="text" name="display" value="{{ display }}">
+
+    <!-- Front Camera -->
+    <label>Front Camera</label>
+    <input type="text" name="front_camera" value="{{ front_camera }}">
+
+    <!-- Back Camera -->
+    <label>Back Camera</label>
+    <input type="text" name="back_camera" value="{{ back_camera }}">
+
+    <button type="submit">Apply Filters</button>
 </form>
+
+<hr>
+
 
 <hr>
 
@@ -39,13 +66,17 @@
 <!-- Pagination -->
 <div>
     {% if current_page > 1 %}
-        <a href="?page={{ current_page|add:-1 }}&brand={{ brand }}&price={{ price }}">⬅ Prev</a>
+        <a href="?page={{ current_page|add:-1 }}&brand={{ brand }}&price={{ price }}&ram={{ ram }}&storage={{ storage }}&battery={{ battery }}&processor={{ processor }}&display={{ display }}&front_camera={{ front_camera }}&back_camera={{ back_camera }}">
+            ⬅ Prev
+        </a>
     {% endif %}
 
     Page {{ current_page }} of {{ total_pages }}
 
     {% if current_page < total_pages %}
-        <a href="?page={{ current_page|add:1 }}&brand={{ brand }}&price={{ price }}">Next ➡</a>
+        <a href="?page={{ current_page|add:1 }}&brand={{ brand }}&price={{ price }}&ram={{ ram }}&storage={{ storage }}&battery={{ battery }}&processor={{ processor }}&display={{ display }}&front_camera={{ front_camera }}&back_camera={{ back_camera }}">
+            Next ➡
+        </a>
     {% endif %}
 </div>
 
