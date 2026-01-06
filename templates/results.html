@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recommended Devices</title>
+</head>
+<body>
+<h2>Recommended Devices</h2>
+
+{% for d in devices %}
+    <div>
+        <h3>{{ d.name }}</h3>
+        <p>Brand: {{ d.brand }}</p>
+        <p>Price: ₹{{ d.price }}</p>
+        <p>Rating: {{ d.rating }}</p>
+        <p>Score: {{ d.score }}</p>
+        <hr>
+    </div>
+{% endfor %}
+
+<a href="/">Back</a>
+</body>
+</html>

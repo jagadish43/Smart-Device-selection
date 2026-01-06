@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Device Recommendation</title>
+</head>
+<body>
+<h2>Find Best Device</h2>
+
+<form method="get">
+    <label>Brand:</label>
+    <select name="brand">
+        <option value="">All</option>
+        <option value="Samsung" {% if brand == "Samsung" %}selected{% endif %}>Samsung</option>
+        <option value="Apple" {% if brand == "Apple" %}selected{% endif %}>Apple</option>
+        <option value="Xiaomi" {% if brand == "Xiaomi" %}selected{% endif %}>Xiaomi</option>
+        <option value="Realme" {% if brand == "Realme" %}selected{% endif %}>Realme</option>
+    </select>
+
+    <label>Max Price:</label>
+    <input type="number" name="price" value="{{ price }}">
+
+    <button type="submit">Filter</button>
+</form>
+
+<hr>
+
+<h3>Available Devices</h3>
+
+{% for d in devices %}
+    <div>
+        <h4>{{ d.name }}</h4>
+        <p>Brand: {{ d.brand }}</p>
+        <p>Price: ₹{{ d.price }}</p>
+        <p>RAM: {{ d.ram }} GB</p>
+        <hr>
+    </div>
+{% endfor %}
+
+<!-- Pagination -->
+<div>
+    {% if current_page > 1 %}
+        <a href="?page={{ current_page|add:-1 }}&brand={{ brand }}&price={{ price }}">⬅ Prev</a>
+    {% endif %}
+
+    Page {{ current_page }} of {{ total_pages }}
+
+    {% if current_page < total_pages %}
+        <a href="?page={{ current_page|add:1 }}&brand={{ brand }}&price={{ price }}">Next ➡</a>
+    {% endif %}
+</div>
+
+
+</body>
+</html>
