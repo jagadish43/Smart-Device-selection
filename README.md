@@ -1,53 +1,50 @@
-Smart Device Discovery Platform (Django + MongoDB)
+# Smart Device Discovery Platform (Django + MongoDB)
 
-A backend-driven web application for filtering and exploring smartphone data using real-world datasets.
-Built with Django and MongoDB, focusing on data ingestion, querying, and scalable filtering.
+A backend-driven web application for filtering and exploring smartphone data using real-world datasets.  
+Built with **Django** and **MongoDB**, focusing on **data ingestion, querying, and scalable filtering**.
 
-Features
+---
 
-Server-side filtering by:
+## Features
 
-Brand
+### Server-side filtering by:
+- Brand  
+- Price  
+- RAM  
+- Storage  
+- Processor  
+- Display  
+- Front Camera  
+- Back Camera  
+- Battery  
 
-Price
+### Dependent (Cascading) Filters
+- Selecting a brand updates available:
+  - Processors  
+  - Displays  
+  - Cameras  
+  - RAM / Storage combinations  
 
-RAM
+### Other Features
+- Pagination (10 devices per page)
+- CSV → MongoDB data ingestion
+- Clean query construction using MongoDB operators
 
-Storage
+---
 
-Processor
+## Tech Stack
 
-Display
+- **Backend:** Django (Python)  
+- **Database:** MongoDB  
+- **Frontend:** HTML, CSS, JavaScript  
+- **Data Processing:** Pandas  
+- **Tools:** MongoDB Compass, Git  
 
-Front Camera
+---
 
-Back Camera
+## Architecture (High Level)
 
-Battery
-
-Dependent (cascading) filters
-
-Selecting a brand updates available processors, displays, cameras, and RAM/storage combinations.
-
-Pagination (10 devices per page)
-
-CSV → MongoDB data ingestion
-
-Clean query construction using MongoDB operators
-
-Tech Stack
-
-Backend: Django (Python)
-
-Database: MongoDB
-
-Frontend: HTML, CSS, JavaScript
-
-Data Processing: Pandas
-
-Tools: MongoDB Compass, Git
-
-Architecture (High Level)
+```
 Browser
   ↓
 Django Templates
@@ -57,8 +54,13 @@ Django Views
 MongoDB Queries (filters + pagination)
   ↓
 MongoDB (devices collection)
+```
 
-Project Structure
+---
+
+## Project Structure
+
+```
 smart_device_recommender/
 ├── manage.py
 ├── requirements.txt
@@ -72,56 +74,71 @@ smart_device_recommender/
 │   │   └── urls.py
 │   ├── recommendations/
 │   │   ├── rules.py
-│   │   └── urls.py
-│   │   └── view.py
+│   │   ├── urls.py
+│   │   └── views.py
 │   └── core/
 │       └── db.py
 ├── templates/
-│   └── home.html
+│   ├── home.html
 │   └── result.html
 ├── static/
 │   └── css/
 ├── data/
 │   └── import_csv_to_mongo.py
 └── venv/ (gitignored)
+```
 
-Dataset
+---
 
-Smartphone specifications dataset (CSV)
+## Dataset
 
-Preprocessing steps:
+- Smartphone specifications dataset (CSV)
 
-Column renaming
+### Preprocessing steps:
+- Column renaming  
+- Data cleaning  
+- Type normalization  
+- Bulk insertion into MongoDB  
 
-Data cleaning
+---
 
-Type normalization
+## Key Implementation Details
 
-Bulk insertion into MongoDB
+### Dependent Filters
+Dropdown options are populated using MongoDB `distinct()` queries scoped by brand.
 
-Key Implementation Details
-Dependent Filters
-
-Dropdown options are populated using MongoDB distinct() queries scoped by brand.
-
+```python
 device_collection.distinct("processor", {"brand": /Samsung/i})
+```
 
-Pagination
+### Pagination
+```python
 device_collection.find(query).skip(offset).limit(10)
+```
 
-Filtering
-
+### Filtering
 Filters are dynamically applied based on query parameters to avoid unnecessary conditions.
 
-Running Locally
-# Activate virtual environment
+---
+
+## Running Locally
+
+### Activate virtual environment
+```bash
 venv\Scripts\activate
+```
 
-# Install dependencies
+### Install dependencies
+```bash
 pip install -r requirements.txt
+```
 
-# Start server
+### Start server
+```bash
 python manage.py runserver
+```
 
-
-Open: http://127.0.0.1:8000/
+Open:
+```
+http://127.0.0.1:8000/
+```
