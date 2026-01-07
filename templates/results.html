@@ -1,22 +1,32 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Recommended Devices</title>
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
 </head>
 <body>
-<h2>Recommended Devices</h2>
+<div class="page">
+    <header class="hero">
+        <h1>Recommended Devices</h1>
+        <p>These devices match your filters closely and scored highest on performance, value, and user sentiment.</p>
+    </header>
 
-{% for d in devices %}
-    <div>
-        <h3>{{ d.name }}</h3>
-        <p>Brand: {{ d.brand }}</p>
-        <p>Price: ₹{{ d.price }}</p>
-        <p>Rating: {{ d.rating }}</p>
-        <p>Score: {{ d.score }}</p>
-        <hr>
-    </div>
-{% endfor %}
+    <section>
+        <div class="device-grid">
+            {% for d in devices %}
+                <article class="result-card">
+                    <h3>{{ d.name }}</h3>
+                    <p class="device-meta">Brand: {{ d.brand }}</p>
+                    <p class="device-meta">Price: ₹{{ d.price }} · Rating: {{ d.rating }}</p>
+                    <p class="device-meta">Score: <span class="score">{{ d.score }}</span></p>
+                    <p class="device-meta">RAM: {{ d.ram }} GB · Storage: {{ d.storage }} GB</p>
+                </article>
+            {% endfor %}
+        </div>
 
-<a href="/">Back</a>
+        <a class="nav-link" href="/">Back to filters</a>
+    </section>
+</div>
 </body>
 </html>

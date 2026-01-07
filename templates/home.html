@@ -1,84 +1,178 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Device Recommendation</title>
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
 </head>
 <body>
-<h2>Find Best Device</h2>
+<div class="page">
+    <header class="hero">
+        <h1>Find Your Ideal Smart Device</h1>
+        <p>Filter through the collection using price, RAM, display, camera, and more to identify the best fit.</p>
+    </header>
 
-<form method="get">
-    <!-- Brand -->
-    <label>Brand</label>
-    <input type="text" name="brand" value="{{ brand }}">
+    <form method="get" class="filter-card">
+        <div class="filter-grid">
+            <div>
+                <label>Brand</label>
+                <select name="brand">
+                    <option value="">All brands</option>
+                    {% for option in brand_options %}
+                        <option value="{{ option }}" {% if brand == option %}selected{% endif %}>{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label>Processor</label>
+                <select name="processor">
+                    <option value="">Any processor</option>
+                    {% for option in processor_options %}
+                        <option value="{{ option }}" {% if processor == option %}selected{% endif %}>{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label>Display</label>
+                <select name="display">
+                    <option value="">Any display</option>
+                    {% for option in display_options %}
+                        <option value="{{ option }}" {% if display == option %}selected{% endif %}>{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label>Front Camera</label>
+                <select name="front_camera">
+                    <option value="">Any front camera</option>
+                    {% for option in front_camera_options %}
+                        <option value="{{ option }}" {% if front_camera == option %}selected{% endif %}>{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label>Back Camera</label>
+                <select name="back_camera">
+                    <option value="">Any rear camera</option>
+                    {% for option in back_camera_options %}
+                        <option value="{{ option }}" {% if back_camera == option %}selected{% endif %}>{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label>Battery (≤)</label>
+                <select name="battery">
+                    <option value="">Any battery</option>
+                    {% for option in battery_options %}
+                        <option value="{{ option }}" {% if battery == option %}selected{% endif %}>{{ option }} mAh</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label>RAM · Storage</label>
+                <select id="ramStorageSelect">
+                    <option value="">Any combination</option>
+                    {% for combo in ram_storage_options %}
+                        <option value="{{ combo.ram }}|{{ combo.storage }}" {% if ram == combo.ram and storage == combo.storage %}selected{% endif %}>
+                            {{ combo.ram }} GB · {{ combo.storage }} GB
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
 
-    <!-- Price -->
-    <label>Max Price</label>
-    <input type="number" name="price" value="{{ price }}">
+        <div class="range-field">
+            <label class="slider-label">
+                Budget
+                <span id="priceValue">₹{{ price }}</span>
+            </label>
+            <input
+                id="priceSlider"
+                type="range"
+                name="price"
+                min="{{ price_min }}"
+                max="{{ price_max }}"
+                step="{{ price_step }}"
+                value="{{ price }}"
+            >
+        </div>
 
-    <!-- RAM -->
-    <label>RAM (GB)</label>
-    <input type="number" name="ram" value="{{ ram }}">
+        <input type="hidden" name="ram" id="ramInput" value="{{ ram|default_if_none:'' }}">
+        <input type="hidden" name="storage" id="storageInput" value="{{ storage|default_if_none:'' }}">
 
-    <!-- Storage -->
-    <label>Storage (GB)</label>
-    <input type="number" name="storage" value="{{ storage }}">
+        <button type="submit">Apply Filters</button>
+    </form>
 
-    <!-- Battery -->
-    <label>Battery</label>
-    <input type="text" name="battery" value="{{ battery }}">
+    <section>
+        <div class="section-title">
+            <h3>Available Devices</h3>
+            <span>Page {{ current_page }} of {{ total_pages }}</span>
+        </div>
 
-    <!-- Processor -->
-    <label>Processor</label>
-    <input type="text" name="processor" value="{{ processor }}">
+        <div class="device-grid">
+            {% for d in devices %}
+                <article class="device-card">
+                    <h4>{{ d.name }}</h4>
+                    <p class="device-meta">Brand: {{ d.brand }}</p>
+                    <p class="device-meta">Processor: {{ d.processor }}, Display: {{ d.display }}</p>
+                    <p class="device-meta">RAM: {{ d.ram }} GB · Storage: {{ d.storage }} GB</p>
+                    <p class="device-meta">Battery: {{ d.battery }} · Cameras: {{ d.front_camera }}/{{ d.back_camera }}</p>
+                    <p class="device-price">₹{{ d.price }}</p>
+                </article>
+            {% endfor %}
+        </div>
 
-    <!-- Display -->
-    <label>Display</label>
-    <input type="text" name="display" value="{{ display }}">
+        <div class="pagination">
+            {% if current_page > 1 %}
+                <a href="?page={{ current_page|add:-1 }}{{ pagination_query }}">
+                    ⬅ Prev
+                </a>
+            {% endif %}
 
-    <!-- Front Camera -->
-    <label>Front Camera</label>
-    <input type="text" name="front_camera" value="{{ front_camera }}">
+            Page {{ current_page }} of {{ total_pages }}
 
-    <!-- Back Camera -->
-    <label>Back Camera</label>
-    <input type="text" name="back_camera" value="{{ back_camera }}">
-
-    <button type="submit">Apply Filters</button>
-</form>
-
-<hr>
-
-
-<hr>
-
-<h3>Available Devices</h3>
-
-{% for d in devices %}
-    <div>
-        <h4>{{ d.name }}</h4>
-        <p>Brand: {{ d.brand }}</p>
-        <p>Price: ₹{{ d.price }}</p>
-        <p>RAM: {{ d.ram }} GB</p>
-        <hr>
-    </div>
-{% endfor %}
-
-<!-- Pagination -->
-<div>
-    {% if current_page > 1 %}
-        <a href="?page={{ current_page|add:-1 }}&brand={{ brand }}&price={{ price }}&ram={{ ram }}&storage={{ storage }}&battery={{ battery }}&processor={{ processor }}&display={{ display }}&front_camera={{ front_camera }}&back_camera={{ back_camera }}">
-            ⬅ Prev
-        </a>
-    {% endif %}
-
-    Page {{ current_page }} of {{ total_pages }}
-
-    {% if current_page < total_pages %}
-        <a href="?page={{ current_page|add:1 }}&brand={{ brand }}&price={{ price }}&ram={{ ram }}&storage={{ storage }}&battery={{ battery }}&processor={{ processor }}&display={{ display }}&front_camera={{ front_camera }}&back_camera={{ back_camera }}">
-            Next ➡
-        </a>
-    {% endif %}
+            {% if current_page < total_pages %}
+                <a href="?page={{ current_page|add:1 }}{{ pagination_query }}">
+                    Next ➡
+                </a>
+            {% endif %}
+        </div>
+    </section>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const priceSlider = document.getElementById("priceSlider");
+        const priceValue = document.getElementById("priceValue");
+        if (priceSlider && priceValue) {
+            const updateValue = () => {
+                const formatted = Number(priceSlider.value).toLocaleString("en-IN");
+                priceValue.textContent = `₹${formatted}`;
+            };
+            priceSlider.addEventListener("input", updateValue);
+            updateValue();
+        }
+
+        const comboSelect = document.getElementById("ramStorageSelect");
+        const ramInput = document.getElementById("ramInput");
+        const storageInput = document.getElementById("storageInput");
+        if (comboSelect && ramInput && storageInput) {
+            const syncFields = () => {
+                const [ram, storage] = comboSelect.value.split("|");
+                ramInput.value = ram || "";
+                storageInput.value = storage || "";
+            };
+            syncFields();
+        }
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const brandSelect = document.querySelector("select[name='brand']");
+        if (brandSelect) {
+            brandSelect.addEventListener("change", function () {
+                this.form.submit();
+            });
+        }
+    });
+</script>
 
 
 </body>
